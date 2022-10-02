@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/login-checker.js"></script>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/weather.css">
+    <script src="https://kit.fontawesome.com/871dbf2337.js" crossorigin="anonymous"></script>
+    <title>Employees Management System</title>
+
+    <style>
+        .description_msg { 
+            text-align: center;
+            margin-top: 5rem;
+            font-weight: 500;
+        }
+    </style>
+
+</head>
+<body>
+    
+    <%- include('./partials/header', { title: 'Weather Dashboard'}); %>
+
+    <%- include('./partials/page-title', { page_title: 'Weather Details'}); %>
+    
+    <div class="container">
+        <div class="new-entry">
+            <h3 class="new-entry__title">Weather Information</h3>
+            <button class="new-entry__action btn btn-primary btn-icon" id="weather_refresh" disabled onclick="updateWeather()">Refresh</button>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <ul class="list-group" id="weather_list">
+            
+        </ul>
+
+        <p class="description_msg" id="description_msg"></p>
+    </div>
+
+    <script src="js/constants.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        const weatherRefresh = document.querySelector('#weather_refresh');
+        const descriptionMsg = document.querySelector('#description_msg');
+        const weatherList = document.querySelector('#weather_list');
+
+        const getWeather = async () => { 
+            descriptionMsg.style.display = 'block';
+            const res = await fetch(API_WEATHER_URL, { 
+                headers: { 
+                    'authorization': `Bearer ${localStorage.getItem('authToken')}`
+                },
+                'method': 'GET'
+            });
+
+            const weather = await res.json()
+            return weather;
+        }
+
+        function createListItem(title, value) { 
+            const list = document.createElement('li');
+            list.classList.add('list-group__item');
+
+            const titleElement = document.createElement('span');
+            titleElement.classList.add('title');
+            titleElement.textContent = title;
+
+            const valueElement = document.createElement('span');
+            valueElement.textContent = value;
+
+            list.append(titleElement, valueElement);
+
+            return list;
+        }   
+
+        function displayWeather(weather) { 
+            descriptionMsg.style.display = 'none'
+            weatherList.style.display = 'block';
+            const { name, region, country } = weather.location;
+            const { cloud, condition: { text: condition }, temp_c, humidity} = weather.current;
+            
+            [ 
+                createListItem('City', name),
+                createListItem('Region', region),
+                createListItem('Country', country),
+                createListItem('Temperature', `${temp_c}*C`),
+                createListItem('Condition', condition),
+            ].forEach(e => weatherList.appendChild(e));
+        }
+
+        const updateWeather = async () => { 
+            descriptionMsg.textContent = 'Fetching latest weather update...';
+            weatherRefresh.setAttribute('disabled', 'disabled');
+            weatherList.innerHTML = '';
+
+            const weather = await getWeather();
+            displayWeather(weather);
+            weatherRefresh.removeAttribute('disabled');
+        }
+
+        window.addEventListener('load', async () => { 
+            await updateWeather();
+        })
+
+
+    </script>
+</body>
+</html>

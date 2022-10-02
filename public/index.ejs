@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/tables.css">
+    <script src="https://kit.fontawesome.com/871dbf2337.js" crossorigin="anonymous"></script>
+    <title>Employees Management System</title>
+</head>
+<body>
+    
+    <%- include('./partials/header', { title: 'Employee Management Dashboard'}); %>
+
+    <%- include('./partials/page-title', { page_title: 'Employee Salary Information'}); %>
+    
+    <div class="container">
+        <div class="new-entry">
+            <h3 class="new-entry__title">Add Employee</h3>
+            <a href="/create/" class="new-entry__action btn btn-primary btn-icon">+</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <% if (employees.length !== 0) { %>
+        <table class="table">
+            <thead class="table__header">
+                <tr class="table__row">
+                    <th class="table__row-item">Name</th>
+                    <th class="table__row-item">Salary</th>
+                    <th class="table__row-item">Min Salary</th>
+                    <th class="table__row-item">Max Salary</th>
+                    <th class="table__row-item">Tax 4%</th>
+                    <th class="table__row-item">Edit</th>
+                    <th class="table__row-item">Remove</th>
+                </tr>
+            </thead>
+            <tbody class="table__body">
+                <% for (let i=0; i < employees.length; i++) { %>
+                <tr>
+                    <td class="table__row-item"><%= employees[i].name %></td>
+                    <td class="table__row-item"><%= employees[i].salary %></td>
+                    <td class="table__row-item"><%= employees[i].minSalary %></td>
+                    <td class="table__row-item"><%= employees[i].maxSalary %></td>
+                    <td class="table__row-item"><%= employees[i].tax %></td>
+                    <td class="table__row-item"><a href="update/<%= employees[i]._id %>" class="text-dark"><i class="fa fa-edit"></i></a></td>
+                    <td class="table__row-item"><a href="delete/<%= employees[i]._id %>" class="text-danger"><i class="fa fa-trash"></i></a></td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <%} else { %>
+            <p class="description_msg" id="description_msg">No Employees data to show, add some?</p>
+        <% } %>
+    </div>
+
+    <script src="js/common.js"></script>
+</body>
+</html>

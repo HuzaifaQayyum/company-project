@@ -1,0 +1,43 @@
+.form-group { 
+    display: flex;
+    margin-bottom: 1.2rem;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+.form-label { 
+    margin-bottom: .5rem;
+    font-weight: 500;
+}
+
+.form-control { 
+    padding: .7rem;
+    border-radius: .5rem;
+    border: 1px solid var(--primary-color);
+    flex-grow: 1;
+}
+
+.form__actions { 
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.form-errors__group { 
+    background-color: var(--danger-light);
+    border-radius: .3rem;
+    padding: .8rem;
+    color: var(--danger-dark);
+    font-size: .9rem;
+    overflow: hidden;
+    list-style: initial;
+    list-style-position: inside;
+}
+
+
+.new-entry-form .form-errors__group { 
+    flex-basis: 100%;
+    margin-top: .4rem;
+}

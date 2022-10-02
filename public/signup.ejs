@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/logout-checker.js"></script>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="https://kit.fontawesome.com/871dbf2337.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
+    <title>Employees Management System</title>
+</head>
+<body>
+    
+    <%- include('./partials/header', { 'title': 'Authentication Area'}); %>
+
+    <div class="card">
+        <div class="card__header">
+            <div class="container">
+                <h1 class="h3 card__header-title">Signup</h1>
+            </div>
+        </div>
+        <hr>
+        
+        <div class="card__body">
+            <div class="container">
+                <form novalidate id="auth_form" auth-type="signup">
+
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" value="john_doe" class="form-control" autocomplete="username" id="username" placeholder="john_doe">
+                    </div>
+
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">password</label>
+                        <input type="password" value="12345678" class="form-control" id="password" placeholder="****">
+                    </div>
+                </form>
+
+                <div class="form-errors" id="form-errors">
+                    <ul class="form-errors__group" id="form-errors__group" style="display: none;">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="card__actions">
+            <div class="container">
+                <button class="btn btn-primary w-100" id="submit">Submit</button>
+            </div>
+        </div>
+        <div class="container">
+            <ul class="card__extra-actions">
+                <li>Don't Have account? <a href="/auth/login" class="text-primary" style="font-weight: 600;">Login</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="/js/constants.js"></script>
+    <script src="/js/common.js"></script>
+    <script src='/js/auth.js'></script>
+
+</body>
+</html>

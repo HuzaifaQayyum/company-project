@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/login-checker.js"></script>
+    <script src="/js/constants.js"></script>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/tables.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    <script src="js/common.js"></script>
+    <script src="https://kit.fontawesome.com/871dbf2337.js" crossorigin="anonymous"></script>
+    <title>Employees Management System</title>
+
+    <style>
+        #users_table { 
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+    
+    <%- include('./partials/header', { title: 'Explore Users Dashboard'}); %>
+
+    <%- include('./partials/page-title', { page_title: 'Near ME'}); %>
+    
+    <div class="container">
+        <form novalidate id="location_form">
+            <div class="filter">
+                <input type="number" min="1" id="km_input" class="form-control" style="width: 40%; display: inline-block;" placeholder="Enter in KiloMeters.">
+                <button class="btn btn-primary" id="submit" disabled>Find</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
+        <table class="table" id="users_table" style="display: none;">
+            <thead class="table__header">
+                <tr class="table__row">
+                    <th class="table__row-item">Username</th>
+                    <th class="table__row-item">Latitude, Longitude</th>
+                </tr>
+            </thead>
+            <tbody class="table__body" id="users-row-group">
+            </tbody>
+        </table>
+        
+        <p class="description_msg" id="description_msg">Explore Nearby users</p>
+    </div>
+
+
+    <script>
+        const form = document.querySelector('#location_form');
+        const distanceInput = document.querySelector('#km_input')
+        const submitBtn = document.querySelector('#submit');
+        const usersTable = document.querySelector('#users_table');
+        const descriptionMessage = document.querySelector('#description_msg');
+        const usersRowGroup = document.querySelector('#users-row-group');
+
+
+        distanceInput.addEventListener('input', e => { 
+            if (distanceInput.value.trim() == ''|| isNaN(distanceInput.value) || distanceInput.value < 1) {
+                submitBtn.setAttribute('disabled', 'disabled')
+                return
+            }
+            else {
+                submitBtn.removeAttribute('disabled')
+                return
+            }
+        })
+
+
+        function clearInputAndDisableSubmitBtn() { 
+            distanceInput.value = '';
+            submitBtn.setAttribute('disabled', 'disabled');
+        }
+
+        async function fetchUsers(distance) { 
+            const res = await fetch(API_NearMe_URL + '/' + distance, { 
+                    method: 'GET',
+                    headers: { 
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+            return await res.json();
+        }
+
+        function createUserRow(user) { 
+            const table_row = document.createElement('tr');
+            table_row.classList.add('table__row')
+
+            const usernameTD = document.createElement('td');
+            usernameTD.classList.add('table__row-item');
+            usernameTD.textContent = user.username;
+
+            const locationTD = document.createElement('td');
+            locationTD.classList.add('table__row-item');
+            locationTD.textContent = user.location.coordinates;
+
+            table_row.append(usernameTD, locationTD);
+            return table_row;
+        }
+
+        form.addEventListener('submit', async e => { 
+            e.preventDefault();
+            descriptionMessage.textContent = 'Fetching Users... Please wait..'
+            usersRowGroup.innerHTML = '';
+            descriptionMessage.style.display = 'block';
+            const distance = distanceInput.value;
+            clearInputAndDisableSubmitBtn();
+            
+            try {
+                const users = (await fetchUsers(distance)).users;
+                if (!users.length) {
+                    descriptionMessage.textContent = 'No Nearby user found. Inviting others to the app might help :)';
+                } else {
+                    descriptionMessage.style.display = 'none';
+                    for (const user of users)
+                        usersRowGroup.append(createUserRow(user));
+                    usersTable.style.display = 'table';
+                }
+                
+                
+            } catch (err) { 
+                console.log(err);
+                descriptionMessage.textContent = 'Unable to fetch. Please try again.'
+            }
+        })
+
+    </script>
+</body>
+</html>

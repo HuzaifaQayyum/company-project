@@ -1,0 +1,42 @@
+.card { 
+    margin: 0 auto;
+    width: 40rem;
+    background-color: #fff;
+    margin-top: 3rem;
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.card__header { 
+    margin: 1rem 0;
+}
+
+.card__header-title { 
+    text-align: center;
+}
+
+.card__body { 
+    margin: .5rem 0;
+}
+
+.form-group { 
+    flex-direction: column;
+    align-items: start;
+}
+
+
+.form-control { 
+    margin-left: 0;
+    width: 100%;
+}
+
+
+.card__actions { 
+    margin: .5rem 0;
+    text-align: center;
+}
+
+
+.card__extra-actions { 
+    margin: 1rem 0;
+}
